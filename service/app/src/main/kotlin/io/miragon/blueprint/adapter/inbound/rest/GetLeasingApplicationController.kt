@@ -3,6 +3,7 @@ package io.miragon.blueprint.adapter.inbound.rest
 import com.fasterxml.jackson.annotation.JsonFormat
 import io.miragon.blueprint.application.port.inbound.GetLeasingApplicationQuery
 import io.miragon.blueprint.domain.leasing.ApplicationId
+import io.swagger.v3.oas.annotations.Operation
 import org.springframework.http.ResponseEntity
 import java.time.LocalDateTime
 import org.springframework.web.bind.annotation.GetMapping
@@ -16,6 +17,7 @@ class GetLeasingApplicationController(
     private val query: GetLeasingApplicationQuery,
 ) {
 
+    @Operation(operationId = "getLeasingApplication")
     @GetMapping("/{applicationId}")
     fun byId(@PathVariable applicationId: String): ResponseEntity<LeasingApplicationDto> {
         val result = query.byId(ApplicationId.of(applicationId)) ?: return ResponseEntity.notFound().build()

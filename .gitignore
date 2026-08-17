@@ -11,3 +11,13 @@
 .vscode
 .context
 node_modules/
+
+# frontend build artefacts
+frontend/dist/
+frontend/coverage/
+frontend/.vite/
+# e2e artefacts
+e2e/playwright-report/
+e2e/test-results/
+frontend/playwright-report/
+frontend/test-results/

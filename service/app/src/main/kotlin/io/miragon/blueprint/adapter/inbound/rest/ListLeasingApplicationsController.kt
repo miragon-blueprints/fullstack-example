@@ -3,6 +3,7 @@ package io.miragon.blueprint.adapter.inbound.rest
 import com.fasterxml.jackson.annotation.JsonFormat
 import io.miragon.blueprint.application.port.inbound.ListLeasingApplicationsQuery
 import io.miragon.blueprint.domain.leasing.LeasingStatus
+import io.swagger.v3.oas.annotations.Operation
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -19,6 +20,7 @@ class ListLeasingApplicationsController(
     private val query: ListLeasingApplicationsQuery,
 ) {
 
+    @Operation(operationId = "listLeasingApplications")
     @GetMapping
     fun list(
         @RequestParam(required = false) status: String?,

@@ -3,6 +3,7 @@ package io.miragon.blueprint.adapter.inbound.rest
 import com.fasterxml.jackson.annotation.JsonFormat
 import io.miragon.blueprint.application.port.inbound.GetPendingClarificationsQuery
 import io.miragon.blueprint.domain.leasing.PendingClarification
+import io.swagger.v3.oas.annotations.Operation
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -23,6 +24,7 @@ class GetPendingClarificationsController(
     private val query: GetPendingClarificationsQuery,
 ) {
 
+    @Operation(operationId = "listPendingClarifications")
     @GetMapping("/clarify-alternative")
     fun pending(): List<PendingClarificationDto> =
         query.pending().map { it.toDto() }

@@ -9,7 +9,7 @@
     "/api/bike-leasing" : {
       "get" : {
         "tags" : [ "list-leasing-applications-controller" ],
-        "operationId" : "list",
+        "operationId" : "listLeasingApplications",
         "parameters" : [ {
           "name" : "status",
           "in" : "query",
@@ -51,7 +51,7 @@
       },
       "post" : {
         "tags" : [ "submit-leasing-request-controller" ],
-        "operationId" : "submit",
+        "operationId" : "submitLeasingRequest",
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -79,7 +79,7 @@
     "/api/bike-leasing/{applicationId}/withdraw" : {
       "post" : {
         "tags" : [ "withdraw-application-controller" ],
-        "operationId" : "withdraw",
+        "operationId" : "withdrawApplication",
         "parameters" : [ {
           "name" : "applicationId",
           "in" : "path",
@@ -139,7 +139,7 @@
     "/api/bike-leasing/{applicationId}/clarify-alternative" : {
       "post" : {
         "tags" : [ "select-alternative-controller" ],
-        "operationId" : "clarifyAlternative",
+        "operationId" : "selectAlternative",
         "parameters" : [ {
           "name" : "applicationId",
           "in" : "path",
@@ -169,7 +169,7 @@
     "/api/tasks/clarify-alternative" : {
       "get" : {
         "tags" : [ "get-pending-clarifications-controller" ],
-        "operationId" : "pending",
+        "operationId" : "listPendingClarifications",
         "responses" : {
           "200" : {
             "description" : "OK",
@@ -190,7 +190,7 @@
     "/api/bikes" : {
       "get" : {
         "tags" : [ "list-bikes-controller" ],
-        "operationId" : "all",
+        "operationId" : "listBikes",
         "responses" : {
           "200" : {
             "description" : "OK",
@@ -211,7 +211,7 @@
     "/api/bike-leasing/{applicationId}" : {
       "get" : {
         "tags" : [ "get-leasing-application-controller" ],
-        "operationId" : "byId",
+        "operationId" : "getLeasingApplication",
         "parameters" : [ {
           "name" : "applicationId",
           "in" : "path",
