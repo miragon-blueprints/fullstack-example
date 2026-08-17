@@ -10,33 +10,68 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AufgabenRouteImport } from './routes/aufgaben'
+import { Route as AntraegeApplicationIdRouteImport } from './routes/antraege.$applicationId'
+import { Route as AntraegeNeuRouteImport } from './routes/antraege.neu'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AufgabenRoute = AufgabenRouteImport.update({
+  id: '/aufgaben',
+  path: '/aufgaben',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AntraegeApplicationIdRoute = AntraegeApplicationIdRouteImport.update({
+  id: '/antraege/$applicationId',
+  path: '/antraege/$applicationId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AntraegeNeuRoute = AntraegeNeuRouteImport.update({
+  id: '/antraege/neu',
+  path: '/antraege/neu',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/aufgaben': typeof AufgabenRoute
+  '/antraege/$applicationId': typeof AntraegeApplicationIdRoute
+  '/antraege/neu': typeof AntraegeNeuRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/aufgaben': typeof AufgabenRoute
+  '/antraege/$applicationId': typeof AntraegeApplicationIdRoute
+  '/antraege/neu': typeof AntraegeNeuRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/aufgaben': typeof AufgabenRoute
+  '/antraege/$applicationId': typeof AntraegeApplicationIdRoute
+  '/antraege/neu': typeof AntraegeNeuRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/aufgaben' | '/antraege/$applicationId' | '/antraege/neu'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/aufgaben' | '/antraege/$applicationId' | '/antraege/neu'
+  id:
+    | '__root__'
+    | '/'
+    | '/aufgaben'
+    | '/antraege/$applicationId'
+    | '/antraege/neu'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AufgabenRoute: typeof AufgabenRoute
+  AntraegeApplicationIdRoute: typeof AntraegeApplicationIdRoute
+  AntraegeNeuRoute: typeof AntraegeNeuRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +83,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/aufgaben': {
+      id: '/aufgaben'
+      path: '/aufgaben'
+      fullPath: '/aufgaben'
+      preLoaderRoute: typeof AufgabenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/antraege/$applicationId': {
+      id: '/antraege/$applicationId'
+      path: '/antraege/$applicationId'
+      fullPath: '/antraege/$applicationId'
+      preLoaderRoute: typeof AntraegeApplicationIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/antraege/neu': {
+      id: '/antraege/neu'
+      path: '/antraege/neu'
+      fullPath: '/antraege/neu'
+      preLoaderRoute: typeof AntraegeNeuRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AufgabenRoute: AufgabenRoute,
+  AntraegeApplicationIdRoute: AntraegeApplicationIdRoute,
+  AntraegeNeuRoute: AntraegeNeuRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

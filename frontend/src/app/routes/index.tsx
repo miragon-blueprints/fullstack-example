@@ -1,14 +1,32 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { z } from "zod";
+import { LEASING_STATUSES } from "@/entities/leasing-application";
+import { ApplicationListPage } from "@/pages/application-list";
 
-export const Route = createFileRoute("/")({
-  component: HomePage,
+// The status filter lives in the URL, so it survives reload and is shareable.
+const searchSchema = z.object({
+  status: z.enum(LEASING_STATUSES).optional(),
 });
 
-function HomePage() {
+export const Route = createFileRoute("/")({
+  component: ApplicationListRoute,
+  validateSearch: searchSchema,
+});
+
+function ApplicationListRoute() {
+  const navigate = useNavigate();
+  const { status } = Route.useSearch();
+
   return (
-    <main className="mx-auto flex min-h-screen max-w-[var(--container-page)] flex-col items-center justify-center gap-4 px-6">
-      <h1 className="font-sans text-h1">MiraVelo</h1>
-      <p className="text-lead text-schwarz/60">Bike-Leasing, neu gedacht.</p>
-    </main>
+    <ApplicationListPage
+      status={status ?? null}
+      onStatusChange={(next) =>
+        void navigate({ to: "/", search: next ? { status: next } : {} })
+      }
+      onSelect={(applicationId) =>
+        void navigate({ to: "/antraege/$applicationId", params: { applicationId } })
+      }
+      onNew={() => void navigate({ to: "/antraege/neu" })}
+    />
   );
 }

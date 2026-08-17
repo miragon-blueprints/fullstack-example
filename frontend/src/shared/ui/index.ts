@@ -39,3 +39,5 @@ export { Table, THead, TBody, TR, TH, TD } from "./table";
 export { Textarea } from "./textarea";
 export type { TextareaProps } from "./textarea";
 export { Toaster, toast } from "./toaster";
+export { QueryBoundary } from "./query-boundary";
+export { EmptyState } from "./empty-state";
