@@ -1,0 +1,4 @@
+node_modules
+dist
+coverage
+src/app/route-tree.gen.ts

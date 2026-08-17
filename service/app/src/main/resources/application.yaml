@@ -13,12 +13,10 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-  jackson:
-    datatype:
-      datetime:
-        # Serialise LocalDateTime as ISO-8601 strings, not epoch arrays — orval/TS expects strings.
-        # Jackson 3 (Spring Boot 4) moved this flag from SerializationFeature to DateTimeFeature.
-        write-dates-as-timestamps: false
+  mvc:
+    problemdetails:
+      # Let Spring's own handlers (404, 400, …) also emit RFC 9457 application/problem+json.
+      enabled: true
 
 springdoc:
   api-docs:

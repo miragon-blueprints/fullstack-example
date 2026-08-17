@@ -66,6 +66,7 @@ pitest {
             "io.miragon.blueprint.adapter.process.*ProcessApi*",
             "io.miragon.blueprint.adapter.process.HistoryCleanupConfiguration*",
             "io.miragon.blueprint.CibsevenBikeLeasingApplication*",
+            "io.miragon.blueprint.BikeCatalogueSeeder*",
             "io.miragon.blueprint.adapter.inbound.cibseven.*",
         ),
     )
