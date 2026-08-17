@@ -5,66 +5,74 @@
  * Customer-portal and back-office endpoints for the MiraVelo bike-leasing process. The engine-internal /engine-rest API is intentionally excluded.
  * OpenAPI spec version: 1.0
  */
-import * as zod from "zod";
+import * as zod from 'zod';
 
 export const listLeasingApplicationsQueryPageDefault = 0;
 export const listLeasingApplicationsQuerySizeDefault = 20;
 
 export const ListLeasingApplicationsQueryParams = zod.object({
-  status: zod.string().optional(),
-  page: zod.int().default(listLeasingApplicationsQueryPageDefault),
-  size: zod.int().default(listLeasingApplicationsQuerySizeDefault),
-});
+  "status": zod.string().optional(),
+  "page": zod.int().default(listLeasingApplicationsQueryPageDefault),
+  "size": zod.int().default(listLeasingApplicationsQuerySizeDefault)
+})
 
-export const ListLeasingApplicationsResponse = zod.unknown();
+export const ListLeasingApplicationsResponse = zod.unknown()
+
 
 export const SubmitLeasingRequestBody = zod.object({
-  customerName: zod.string(),
-  email: zod.string(),
-  age: zod.int(),
-  monthlyNetIncome: zod.number(),
-  bikeId: zod.string(),
-  bikeModel: zod.string(),
-});
+  "customerName": zod.string(),
+  "email": zod.string(),
+  "age": zod.int(),
+  "monthlyNetIncome": zod.number(),
+  "bikeId": zod.string(),
+  "bikeModel": zod.string()
+})
 
-export const SubmitLeasingRequestResponse = zod.unknown();
+export const SubmitLeasingRequestResponse = zod.unknown()
+
 
 export const WithdrawApplicationParams = zod.object({
-  applicationId: zod.string(),
-});
+  "applicationId": zod.string()
+})
 
-export const WithdrawApplicationResponse = zod.unknown();
+export const WithdrawApplicationResponse = zod.unknown()
+
 
 export const SignContractParams = zod.object({
-  applicationId: zod.string(),
-});
+  "applicationId": zod.string()
+})
 
-export const SignContractResponse = zod.unknown();
+export const SignContractResponse = zod.unknown()
+
 
 export const ReportHandoverParams = zod.object({
-  applicationId: zod.string(),
-});
+  "applicationId": zod.string()
+})
 
-export const ReportHandoverResponse = zod.unknown();
+export const ReportHandoverResponse = zod.unknown()
+
 
 export const SelectAlternativeParams = zod.object({
-  applicationId: zod.string(),
-});
+  "applicationId": zod.string()
+})
 
 export const SelectAlternativeBody = zod.object({
-  alternativeFound: zod.boolean(),
-  bikeId: zod.string().nullish(),
-  bikeModel: zod.string().nullish(),
-});
+  "alternativeFound": zod.boolean(),
+  "bikeId": zod.string().nullish(),
+  "bikeModel": zod.string().nullish()
+})
 
-export const SelectAlternativeResponse = zod.unknown();
+export const SelectAlternativeResponse = zod.unknown()
 
-export const ListPendingClarificationsResponse = zod.unknown();
 
-export const ListBikesResponse = zod.unknown();
+export const ListPendingClarificationsResponse = zod.unknown()
+
+
+export const ListBikesResponse = zod.unknown()
+
 
 export const GetLeasingApplicationParams = zod.object({
-  applicationId: zod.string(),
-});
+  "applicationId": zod.string()
+})
 
-export const GetLeasingApplicationResponse = zod.unknown();
+export const GetLeasingApplicationResponse = zod.unknown()

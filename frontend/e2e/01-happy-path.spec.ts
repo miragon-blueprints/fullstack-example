@@ -3,7 +3,10 @@ import { expectStatus, submitApplication } from "./helpers/ui";
 import { fireTimer } from "./helpers/engine-rest";
 
 // Mirrors bruno/01-happy-path: submit -> sign -> report handover -> fire withdrawal timer -> aktiv.
-test("happy path: the leasing goes active after the withdrawal period", async ({ page, request }) => {
+test("happy path: the leasing goes active after the withdrawal period", async ({
+  page,
+  request,
+}) => {
   const applicationId = await submitApplication(page, {
     name: "Alice Rider",
     email: "alice@example.com",

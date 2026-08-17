@@ -14,7 +14,9 @@ export async function processInstanceId(
   request: APIRequestContext,
   applicationId: string,
 ): Promise<string> {
-  const response = await request.get(`${ENGINE_REST}/process-instance?businessKey=${applicationId}`);
+  const response = await request.get(
+    `${ENGINE_REST}/process-instance?businessKey=${applicationId}`,
+  );
   expect(response.ok()).toBeTruthy();
   const instances = (await response.json()) as Array<{ id: string }>;
   expect(instances.length, `no running instance for ${applicationId}`).toBeGreaterThan(0);
