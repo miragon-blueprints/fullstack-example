@@ -8,12 +8,6 @@ const dateTimeFormat = new Intl.DateTimeFormat("de-DE", {
   minute: "2-digit",
 });
 
-const dateFormat = new Intl.DateTimeFormat("de-DE", {
-  day: "2-digit",
-  month: "2-digit",
-  year: "numeric",
-});
-
 const currencyFormat = new Intl.NumberFormat("de-DE", {
   style: "currency",
   currency: "EUR",
@@ -25,13 +19,6 @@ export function formatDateTime(iso: string | null | undefined): string {
   if (!iso) return "";
   const date = new Date(iso);
   return Number.isNaN(date.getTime()) ? "" : dateTimeFormat.format(date);
-}
-
-/** Formats an ISO-8601 timestamp as `17.08.2026`. */
-export function formatDate(iso: string | null | undefined): string {
-  if (!iso) return "";
-  const date = new Date(iso);
-  return Number.isNaN(date.getTime()) ? "" : dateFormat.format(date);
 }
 
 /** Formats a number as EUR, e.g. `3.500 €`. */

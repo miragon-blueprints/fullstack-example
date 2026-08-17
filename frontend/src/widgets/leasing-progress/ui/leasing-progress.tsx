@@ -47,7 +47,9 @@ export function LeasingProgress({ status }: { status: LeasingStatus | string }) 
                 <Circle size={16} strokeWidth={1.75} />
               )}
             </span>
-            <span className={cn("text-body", active ? "font-medium text-schwarz" : "text-schwarz/60")}>
+            <span
+              className={cn("text-body", active ? "font-medium text-schwarz" : "text-schwarz/60")}
+            >
               {step.label}
             </span>
           </li>

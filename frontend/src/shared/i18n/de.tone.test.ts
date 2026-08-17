@@ -62,7 +62,9 @@ describe("de copy tone of voice", () => {
     const offenders = allLeaves.filter(({ text }) =>
       FORBIDDEN.some((bad) => text.toLowerCase().includes(bad)),
     );
-    expect(offenders, `transliterations in: ${offenders.map((o) => o.path).join(", ")}`).toEqual([]);
+    expect(offenders, `transliterations in: ${offenders.map((o) => o.path).join(", ")}`).toEqual(
+      [],
+    );
   });
 
   it("uses no em-dashes", () => {

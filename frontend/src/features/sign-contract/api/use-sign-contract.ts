@@ -1,5 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { Button, toast } from "@/shared/ui";
+import { toast } from "@/shared/ui";
 import { copy } from "@/shared/i18n";
 import { useSignContract } from "@/shared/api/generated/endpoints";
 import { leasingApplicationKeys } from "@/entities/leasing-application";
@@ -19,13 +19,4 @@ export function useSignContractAction(applicationId: string) {
       onError: () => toast.error(copy.actions.error),
     },
   });
-}
-
-export function SignContractButton({ applicationId }: { applicationId: string }) {
-  const mutation = useSignContractAction(applicationId);
-  return (
-    <Button onClick={() => mutation.mutate({ applicationId })} disabled={mutation.isPending}>
-      {mutation.isPending ? copy.actions.signing : copy.actions.sign}
-    </Button>
-  );
 }

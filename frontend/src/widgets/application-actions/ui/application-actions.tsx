@@ -30,10 +30,14 @@ export function ApplicationActions({
       <CardContent>
         <div aria-live="polite">
           {isTerminal(status) || actions.length === 0 ? (
-            <p className="text-body text-schwarz/70">{TERMINAL_NOTE[status] ?? copy.actions.terminalActive}</p>
+            <p className="text-body text-schwarz/70">
+              {TERMINAL_NOTE[status] ?? copy.actions.terminalActive}
+            </p>
           ) : (
             <div className="flex flex-wrap gap-3">
-              {actions.includes("sign") ? <SignContractButton applicationId={applicationId} /> : null}
+              {actions.includes("sign") ? (
+                <SignContractButton applicationId={applicationId} />
+              ) : null}
               {actions.includes("handover") ? (
                 <ReportHandoverButton applicationId={applicationId} />
               ) : null}

@@ -1,1 +1,1 @@
-export { de, copy, type Copy } from "./de";
+export { de as copy } from "./de";

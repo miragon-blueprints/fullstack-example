@@ -66,7 +66,11 @@ export function SubmitLeasingForm({ onCreated }: { onCreated: (applicationId: st
         <Field label={copy.submit.age} required error={errors.age?.message}>
           <Input type="number" inputMode="numeric" {...register("age", { valueAsNumber: true })} />
         </Field>
-        <Field label={copy.submit.monthlyNetIncome} required error={errors.monthlyNetIncome?.message}>
+        <Field
+          label={copy.submit.monthlyNetIncome}
+          required
+          error={errors.monthlyNetIncome?.message}
+        >
           <Input
             type="number"
             inputMode="numeric"

@@ -126,6 +126,3 @@ export const de = {
     home: "zur übersicht",
   },
 } as const;
-
-export type Copy = typeof de;
-export const copy = de;

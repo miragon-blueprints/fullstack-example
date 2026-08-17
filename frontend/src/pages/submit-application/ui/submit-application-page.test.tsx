@@ -1,8 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import userEvent from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
-import { server } from "@/shared/testing/msw-server";
-import { renderWithProviders, screen, waitFor } from "@/shared/testing/test-utils";
+import { renderWithProviders, screen, server, waitFor } from "@/shared/testing";
 import { SubmitApplicationPage } from "./submit-application-page";
 
 describe("SubmitApplicationPage", () => {

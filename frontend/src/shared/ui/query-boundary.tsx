@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Alert, AlertDescription, AlertTitle } from "./alert";
 import { Button } from "./button";
-import { HttpError } from "@/shared/api/http-client";
+import { HttpError } from "@/shared/api";
 import { copy } from "@/shared/i18n";
 
 interface QueryBoundaryProps {

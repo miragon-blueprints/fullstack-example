@@ -1,2 +1,2 @@
 export { cn } from "./cn";
-export { formatDate, formatDateTime, formatEuro } from "./format";
+export { formatDateTime, formatEuro } from "./format";

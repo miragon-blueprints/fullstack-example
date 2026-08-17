@@ -26,12 +26,11 @@ export function ApplicationSummary({ application }: { application: LeasingApplic
           <Row label={copy.detail.email} value={application.email} />
           <Row label={copy.detail.age} value={`${application.age} ${copy.detail.years}`} />
           <Row label={copy.detail.income} value={formatEuro(application.monthlyNetIncome)} />
-          <Row
-            label={copy.detail.bike}
-            value={application.bikeModel ?? application.bikeId}
-          />
+          <Row label={copy.detail.bike} value={application.bikeModel ?? application.bikeId} />
           <Row label={copy.detail.created} value={formatDateTime(application.createdAt)} />
-          {application.orderId ? <Row label={copy.detail.order} value={application.orderId} /> : null}
+          {application.orderId ? (
+            <Row label={copy.detail.order} value={application.orderId} />
+          ) : null}
           {application.contractId ? (
             <Row label={copy.detail.contract} value={application.contractId} />
           ) : null}

@@ -20,9 +20,7 @@ function ApplicationListRoute() {
   return (
     <ApplicationListPage
       status={status ?? null}
-      onStatusChange={(next) =>
-        void navigate({ to: "/", search: next ? { status: next } : {} })
-      }
+      onStatusChange={(next) => void navigate({ to: "/", search: next ? { status: next } : {} })}
       onSelect={(applicationId) =>
         void navigate({ to: "/antraege/$applicationId", params: { applicationId } })
       }

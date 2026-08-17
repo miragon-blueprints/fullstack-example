@@ -6,6 +6,3 @@
  * "warum pollt die detailseite?" note in frontend/README.md.
  */
 export const POLL_INTERVAL_MS = 2000;
-
-/** Default page size for the application list. */
-export const DEFAULT_PAGE_SIZE = 20;

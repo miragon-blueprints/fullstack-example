@@ -1,5 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { Button, toast } from "@/shared/ui";
+import { toast } from "@/shared/ui";
 import { copy } from "@/shared/i18n";
 import { useReportHandover } from "@/shared/api/generated/endpoints";
 import { leasingApplicationKeys } from "@/entities/leasing-application";
@@ -19,13 +19,4 @@ export function useReportHandoverAction(applicationId: string) {
       onError: () => toast.error(copy.actions.error),
     },
   });
-}
-
-export function ReportHandoverButton({ applicationId }: { applicationId: string }) {
-  const mutation = useReportHandoverAction(applicationId);
-  return (
-    <Button onClick={() => mutation.mutate({ applicationId })} disabled={mutation.isPending}>
-      {mutation.isPending ? copy.actions.handoverPending : copy.actions.handover}
-    </Button>
-  );
 }

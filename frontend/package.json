@@ -17,11 +17,21 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "lint:fsd": "echo \"not yet configured\" && exit 0",
-    "lint:deadcode": "echo \"not yet configured\" && exit 0",
+    "lint:fsd": "steiger ./src --fail-on-warnings",
+    "lint:deadcode": "knip",
     "api:generate": "orval --config orval.config.ts",
     "api:check": "orval --config orval.config.ts && git diff --exit-code -- src/shared/api/generated",
-    "e2e": "echo \"not yet configured\" && exit 0"
+    "e2e": "playwright test",
+    "verify": "npm run format:check && npm run lint && npm run lint:fsd && npm run lint:deadcode && npm run typecheck && npm run test"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{css,json,md}": [
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@fontsource-variable/geist": "5.3.0",
@@ -43,6 +53,8 @@
   "devDependencies": {
     "@eslint/js": "10.0.1",
     "@faker-js/faker": "10.6.0",
+    "@feature-sliced/steiger-plugin": "0.7.0",
+    "@playwright/test": "1.62.1",
     "@tailwindcss/vite": "4.3.3",
     "@tanstack/router-plugin": "1.168.32",
     "@testing-library/jest-dom": "7.0.1",
@@ -55,10 +67,13 @@
     "eslint": "10.8.1",
     "globals": "17.11.0",
     "jsdom": "30.0.1",
+    "knip": "6.32.2",
+    "lint-staged": "17.3.0",
     "msw": "2.15.0",
     "orval": "8.24.0",
     "prettier": "3.9.6",
     "prettier-plugin-tailwindcss": "0.8.1",
+    "steiger": "0.6.0",
     "tailwindcss": "4.3.3",
     "typescript": "6.0.3",
     "typescript-eslint": "8.67.0",

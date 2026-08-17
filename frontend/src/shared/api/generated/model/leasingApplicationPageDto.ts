@@ -5,7 +5,7 @@
  * Customer-portal and back-office endpoints for the MiraVelo bike-leasing process. The engine-internal /engine-rest API is intentionally excluded.
  * OpenAPI spec version: 1.0
  */
-import type { LeasingApplicationSummaryDto } from './leasingApplicationSummaryDto.ts';
+import type { LeasingApplicationSummaryDto } from "./leasingApplicationSummaryDto.ts";
 
 export interface LeasingApplicationPageDto {
   items: LeasingApplicationSummaryDto[];

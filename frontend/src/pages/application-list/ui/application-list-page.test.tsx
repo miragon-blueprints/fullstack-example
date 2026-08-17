@@ -1,7 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { http, HttpResponse } from "msw";
-import { server } from "@/shared/testing/msw-server";
-import { renderWithProviders, screen } from "@/shared/testing/test-utils";
+import { renderWithProviders, screen, server } from "@/shared/testing";
 import { ApplicationListPage } from "./application-list-page";
 
 const noop = () => {};
@@ -58,9 +57,7 @@ describe("ApplicationListPage", () => {
 
   it("shows an error with a retry button when the request fails", async () => {
     server.use(
-      http.get("*/api/bike-leasing", () =>
-        HttpResponse.json({ detail: "boom" }, { status: 500 }),
-      ),
+      http.get("*/api/bike-leasing", () => HttpResponse.json({ detail: "boom" }, { status: 500 })),
     );
     renderWithProviders(page());
     expect(await screen.findByRole("button", { name: /erneut versuchen/i })).toBeInTheDocument();

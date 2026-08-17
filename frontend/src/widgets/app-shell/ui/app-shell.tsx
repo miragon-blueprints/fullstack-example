@@ -15,7 +15,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="flex min-h-screen flex-col bg-grau">
       <header className="border-b border-schwarz/10 bg-weiss">
         <div className="mx-auto flex max-w-[var(--container-page)] items-center justify-between px-6 py-4">
-          <Link to="/" className="text-h3 font-sans font-bold text-schwarz">
+          <Link to="/" className="font-sans text-h3 font-bold text-schwarz">
             {copy.app.name}
           </Link>
           <nav className="flex gap-1">
@@ -36,7 +36,9 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-[var(--container-page)] flex-1 px-6 py-8">{children}</main>
+      <main className="mx-auto w-full max-w-[var(--container-page)] flex-1 px-6 py-8">
+        {children}
+      </main>
 
       <footer className="border-t border-schwarz/10 bg-weiss">
         <div className="mx-auto max-w-[var(--container-page)] px-6 py-4 text-klein text-schwarz/50">

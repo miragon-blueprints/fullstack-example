@@ -7,7 +7,7 @@
  */
 
 export type ListLeasingApplicationsParams = {
-status?: string;
-page?: number;
-size?: number;
+  status?: string;
+  page?: number;
+  size?: number;
 };
