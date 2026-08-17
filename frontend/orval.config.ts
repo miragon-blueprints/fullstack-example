@@ -25,7 +25,6 @@ export default defineConfig({
       prettier: false,
       override: {
         mutator: { path: "src/shared/api/http-client.ts", name: "httpClient" },
-        query: { useQuery: true },
         // Return the response body directly instead of an { status, data, headers } wrapper, so
         // consumers read `useListLeasingApplications().data` (the page) rather than `.data.data`.
         fetch: { includeHttpResponseReturnType: false },

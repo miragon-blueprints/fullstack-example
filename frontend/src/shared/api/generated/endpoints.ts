@@ -6,16 +6,20 @@
  * OpenAPI spec version: 1.0
  */
 import {
+  useMutation,
   useQuery
 } from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
   DefinedUseQueryResult,
+  MutationFunction,
   QueryClient,
   QueryFunction,
   QueryKey,
   UndefinedInitialDataOptions,
+  UseMutationOptions,
+  UseMutationResult,
   UseQueryOptions,
   UseQueryResult
 } from '@tanstack/react-query';
@@ -188,77 +192,47 @@ export const submitLeasingRequest = async (leasingRequestInput: LeasingRequestIn
 
 
 
-export const getSubmitLeasingRequestQueryKey = (leasingRequestInput?: LeasingRequestInput,) => {
-    return [
-    'POST', `/api/bike-leasing`, leasingRequestInput
-    ] as const;
+export const getSubmitLeasingRequestMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof submitLeasingRequest>>, TError,{data: LeasingRequestInput}, TContext>, request?: SecondParameter<typeof httpClient>}
+): UseMutationOptions<Awaited<ReturnType<typeof submitLeasingRequest>>, TError,{data: LeasingRequestInput}, TContext> => {
+
+const mutationKey = ['submitLeasingRequest'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof submitLeasingRequest>>, {data: LeasingRequestInput}> = (props) => {
+          const {data} = props ?? {};
+
+          return  submitLeasingRequest(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SubmitLeasingRequestMutationResult = NonNullable<Awaited<ReturnType<typeof submitLeasingRequest>>>
+    export type SubmitLeasingRequestMutationBody = LeasingRequestInput
+    export type SubmitLeasingRequestMutationError = unknown
+
+    export const useSubmitLeasingRequest = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof submitLeasingRequest>>, TError,{data: LeasingRequestInput}, TContext>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof submitLeasingRequest>>,
+        TError,
+        {data: LeasingRequestInput},
+        TContext
+      > => {
+      return useMutation(getSubmitLeasingRequestMutationOptions(options), queryClient);
     }
-
-
-export const getSubmitLeasingRequestQueryOptions = <TData = Awaited<ReturnType<typeof submitLeasingRequest>>, TError = unknown>(leasingRequestInput: LeasingRequestInput, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof submitLeasingRequest>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getSubmitLeasingRequestQueryKey(leasingRequestInput);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof submitLeasingRequest>>> = ({ signal }) => submitLeasingRequest(leasingRequestInput, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof submitLeasingRequest>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type SubmitLeasingRequestQueryResult = NonNullable<Awaited<ReturnType<typeof submitLeasingRequest>>>
-export type SubmitLeasingRequestQueryError = unknown
-
-
-export function useSubmitLeasingRequest<TData = Awaited<ReturnType<typeof submitLeasingRequest>>, TError = unknown>(
- leasingRequestInput: LeasingRequestInput, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof submitLeasingRequest>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof submitLeasingRequest>>,
-          TError,
-          Awaited<ReturnType<typeof submitLeasingRequest>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useSubmitLeasingRequest<TData = Awaited<ReturnType<typeof submitLeasingRequest>>, TError = unknown>(
- leasingRequestInput: LeasingRequestInput, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof submitLeasingRequest>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof submitLeasingRequest>>,
-          TError,
-          Awaited<ReturnType<typeof submitLeasingRequest>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useSubmitLeasingRequest<TData = Awaited<ReturnType<typeof submitLeasingRequest>>, TError = unknown>(
- leasingRequestInput: LeasingRequestInput, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof submitLeasingRequest>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-
-export function useSubmitLeasingRequest<TData = Awaited<ReturnType<typeof submitLeasingRequest>>, TError = unknown>(
- leasingRequestInput: LeasingRequestInput, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof submitLeasingRequest>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getSubmitLeasingRequestQueryOptions(leasingRequestInput,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-
-
-
-
 
 export const getWithdrawApplicationUrl = (applicationId: string,) => {
 
@@ -283,77 +257,47 @@ export const withdrawApplication = async (applicationId: string, options?: Param
 
 
 
-export const getWithdrawApplicationQueryKey = (applicationId: string,) => {
-    return [
-    'POST', `/api/bike-leasing/${applicationId}/withdraw`
-    ] as const;
+export const getWithdrawApplicationMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof withdrawApplication>>, TError,{applicationId: string}, TContext>, request?: SecondParameter<typeof httpClient>}
+): UseMutationOptions<Awaited<ReturnType<typeof withdrawApplication>>, TError,{applicationId: string}, TContext> => {
+
+const mutationKey = ['withdrawApplication'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof withdrawApplication>>, {applicationId: string}> = (props) => {
+          const {applicationId} = props ?? {};
+
+          return  withdrawApplication(applicationId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type WithdrawApplicationMutationResult = NonNullable<Awaited<ReturnType<typeof withdrawApplication>>>
+
+    export type WithdrawApplicationMutationError = unknown
+
+    export const useWithdrawApplication = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof withdrawApplication>>, TError,{applicationId: string}, TContext>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof withdrawApplication>>,
+        TError,
+        {applicationId: string},
+        TContext
+      > => {
+      return useMutation(getWithdrawApplicationMutationOptions(options), queryClient);
     }
-
-
-export const getWithdrawApplicationQueryOptions = <TData = Awaited<ReturnType<typeof withdrawApplication>>, TError = unknown>(applicationId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof withdrawApplication>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getWithdrawApplicationQueryKey(applicationId);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof withdrawApplication>>> = ({ signal }) => withdrawApplication(applicationId, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: applicationId !== null && applicationId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof withdrawApplication>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type WithdrawApplicationQueryResult = NonNullable<Awaited<ReturnType<typeof withdrawApplication>>>
-export type WithdrawApplicationQueryError = unknown
-
-
-export function useWithdrawApplication<TData = Awaited<ReturnType<typeof withdrawApplication>>, TError = unknown>(
- applicationId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof withdrawApplication>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof withdrawApplication>>,
-          TError,
-          Awaited<ReturnType<typeof withdrawApplication>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useWithdrawApplication<TData = Awaited<ReturnType<typeof withdrawApplication>>, TError = unknown>(
- applicationId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof withdrawApplication>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof withdrawApplication>>,
-          TError,
-          Awaited<ReturnType<typeof withdrawApplication>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useWithdrawApplication<TData = Awaited<ReturnType<typeof withdrawApplication>>, TError = unknown>(
- applicationId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof withdrawApplication>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-
-export function useWithdrawApplication<TData = Awaited<ReturnType<typeof withdrawApplication>>, TError = unknown>(
- applicationId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof withdrawApplication>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getWithdrawApplicationQueryOptions(applicationId,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-
-
-
-
 
 export const getSignContractUrl = (applicationId: string,) => {
 
@@ -378,77 +322,47 @@ export const signContract = async (applicationId: string, options?: Parameters<t
 
 
 
-export const getSignContractQueryKey = (applicationId: string,) => {
-    return [
-    'POST', `/api/bike-leasing/${applicationId}/sign-contract`
-    ] as const;
+export const getSignContractMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof signContract>>, TError,{applicationId: string}, TContext>, request?: SecondParameter<typeof httpClient>}
+): UseMutationOptions<Awaited<ReturnType<typeof signContract>>, TError,{applicationId: string}, TContext> => {
+
+const mutationKey = ['signContract'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof signContract>>, {applicationId: string}> = (props) => {
+          const {applicationId} = props ?? {};
+
+          return  signContract(applicationId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SignContractMutationResult = NonNullable<Awaited<ReturnType<typeof signContract>>>
+
+    export type SignContractMutationError = unknown
+
+    export const useSignContract = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof signContract>>, TError,{applicationId: string}, TContext>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof signContract>>,
+        TError,
+        {applicationId: string},
+        TContext
+      > => {
+      return useMutation(getSignContractMutationOptions(options), queryClient);
     }
-
-
-export const getSignContractQueryOptions = <TData = Awaited<ReturnType<typeof signContract>>, TError = unknown>(applicationId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof signContract>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getSignContractQueryKey(applicationId);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof signContract>>> = ({ signal }) => signContract(applicationId, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: applicationId !== null && applicationId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof signContract>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type SignContractQueryResult = NonNullable<Awaited<ReturnType<typeof signContract>>>
-export type SignContractQueryError = unknown
-
-
-export function useSignContract<TData = Awaited<ReturnType<typeof signContract>>, TError = unknown>(
- applicationId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof signContract>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof signContract>>,
-          TError,
-          Awaited<ReturnType<typeof signContract>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useSignContract<TData = Awaited<ReturnType<typeof signContract>>, TError = unknown>(
- applicationId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof signContract>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof signContract>>,
-          TError,
-          Awaited<ReturnType<typeof signContract>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useSignContract<TData = Awaited<ReturnType<typeof signContract>>, TError = unknown>(
- applicationId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof signContract>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-
-export function useSignContract<TData = Awaited<ReturnType<typeof signContract>>, TError = unknown>(
- applicationId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof signContract>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getSignContractQueryOptions(applicationId,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-
-
-
-
 
 export const getReportHandoverUrl = (applicationId: string,) => {
 
@@ -473,77 +387,47 @@ export const reportHandover = async (applicationId: string, options?: Parameters
 
 
 
-export const getReportHandoverQueryKey = (applicationId: string,) => {
-    return [
-    'POST', `/api/bike-leasing/${applicationId}/report-handover`
-    ] as const;
+export const getReportHandoverMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reportHandover>>, TError,{applicationId: string}, TContext>, request?: SecondParameter<typeof httpClient>}
+): UseMutationOptions<Awaited<ReturnType<typeof reportHandover>>, TError,{applicationId: string}, TContext> => {
+
+const mutationKey = ['reportHandover'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof reportHandover>>, {applicationId: string}> = (props) => {
+          const {applicationId} = props ?? {};
+
+          return  reportHandover(applicationId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ReportHandoverMutationResult = NonNullable<Awaited<ReturnType<typeof reportHandover>>>
+
+    export type ReportHandoverMutationError = unknown
+
+    export const useReportHandover = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reportHandover>>, TError,{applicationId: string}, TContext>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof reportHandover>>,
+        TError,
+        {applicationId: string},
+        TContext
+      > => {
+      return useMutation(getReportHandoverMutationOptions(options), queryClient);
     }
-
-
-export const getReportHandoverQueryOptions = <TData = Awaited<ReturnType<typeof reportHandover>>, TError = unknown>(applicationId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof reportHandover>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getReportHandoverQueryKey(applicationId);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof reportHandover>>> = ({ signal }) => reportHandover(applicationId, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: applicationId !== null && applicationId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof reportHandover>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type ReportHandoverQueryResult = NonNullable<Awaited<ReturnType<typeof reportHandover>>>
-export type ReportHandoverQueryError = unknown
-
-
-export function useReportHandover<TData = Awaited<ReturnType<typeof reportHandover>>, TError = unknown>(
- applicationId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof reportHandover>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof reportHandover>>,
-          TError,
-          Awaited<ReturnType<typeof reportHandover>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useReportHandover<TData = Awaited<ReturnType<typeof reportHandover>>, TError = unknown>(
- applicationId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof reportHandover>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof reportHandover>>,
-          TError,
-          Awaited<ReturnType<typeof reportHandover>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useReportHandover<TData = Awaited<ReturnType<typeof reportHandover>>, TError = unknown>(
- applicationId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof reportHandover>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-
-export function useReportHandover<TData = Awaited<ReturnType<typeof reportHandover>>, TError = unknown>(
- applicationId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof reportHandover>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getReportHandoverQueryOptions(applicationId,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-
-
-
-
 
 export const getSelectAlternativeUrl = (applicationId: string,) => {
 
@@ -569,83 +453,47 @@ export const selectAlternative = async (applicationId: string,
 
 
 
-export const getSelectAlternativeQueryKey = (applicationId: string,
-    alternativeDecisionInput?: AlternativeDecisionInput,) => {
-    return [
-    'POST', `/api/bike-leasing/${applicationId}/clarify-alternative`, alternativeDecisionInput
-    ] as const;
+export const getSelectAlternativeMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof selectAlternative>>, TError,{applicationId: string;data: AlternativeDecisionInput}, TContext>, request?: SecondParameter<typeof httpClient>}
+): UseMutationOptions<Awaited<ReturnType<typeof selectAlternative>>, TError,{applicationId: string;data: AlternativeDecisionInput}, TContext> => {
+
+const mutationKey = ['selectAlternative'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof selectAlternative>>, {applicationId: string;data: AlternativeDecisionInput}> = (props) => {
+          const {applicationId,data} = props ?? {};
+
+          return  selectAlternative(applicationId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SelectAlternativeMutationResult = NonNullable<Awaited<ReturnType<typeof selectAlternative>>>
+    export type SelectAlternativeMutationBody = AlternativeDecisionInput
+    export type SelectAlternativeMutationError = unknown
+
+    export const useSelectAlternative = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof selectAlternative>>, TError,{applicationId: string;data: AlternativeDecisionInput}, TContext>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof selectAlternative>>,
+        TError,
+        {applicationId: string;data: AlternativeDecisionInput},
+        TContext
+      > => {
+      return useMutation(getSelectAlternativeMutationOptions(options), queryClient);
     }
-
-
-export const getSelectAlternativeQueryOptions = <TData = Awaited<ReturnType<typeof selectAlternative>>, TError = unknown>(applicationId: string,
-    alternativeDecisionInput: AlternativeDecisionInput, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof selectAlternative>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getSelectAlternativeQueryKey(applicationId,alternativeDecisionInput);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof selectAlternative>>> = ({ signal }) => selectAlternative(applicationId,alternativeDecisionInput, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: applicationId !== null && applicationId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof selectAlternative>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type SelectAlternativeQueryResult = NonNullable<Awaited<ReturnType<typeof selectAlternative>>>
-export type SelectAlternativeQueryError = unknown
-
-
-export function useSelectAlternative<TData = Awaited<ReturnType<typeof selectAlternative>>, TError = unknown>(
- applicationId: string,
-    alternativeDecisionInput: AlternativeDecisionInput, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof selectAlternative>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof selectAlternative>>,
-          TError,
-          Awaited<ReturnType<typeof selectAlternative>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useSelectAlternative<TData = Awaited<ReturnType<typeof selectAlternative>>, TError = unknown>(
- applicationId: string,
-    alternativeDecisionInput: AlternativeDecisionInput, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof selectAlternative>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof selectAlternative>>,
-          TError,
-          Awaited<ReturnType<typeof selectAlternative>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useSelectAlternative<TData = Awaited<ReturnType<typeof selectAlternative>>, TError = unknown>(
- applicationId: string,
-    alternativeDecisionInput: AlternativeDecisionInput, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof selectAlternative>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-
-export function useSelectAlternative<TData = Awaited<ReturnType<typeof selectAlternative>>, TError = unknown>(
- applicationId: string,
-    alternativeDecisionInput: AlternativeDecisionInput, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof selectAlternative>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getSelectAlternativeQueryOptions(applicationId,alternativeDecisionInput,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-
-
-
-
 
 export const getListPendingClarificationsUrl = () => {
 
