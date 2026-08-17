@@ -21,7 +21,7 @@
     "lint:deadcode": "knip",
     "api:generate": "orval --config orval.config.ts",
     "api:check": "orval --config orval.config.ts && git diff --exit-code -- src/shared/api/generated",
-    "e2e": "playwright test",
+    "e2e": "playwright test --project=chromium",
     "verify": "npm run format:check && npm run lint && npm run lint:fsd && npm run lint:deadcode && npm run typecheck && npm run test"
   },
   "lint-staged": {

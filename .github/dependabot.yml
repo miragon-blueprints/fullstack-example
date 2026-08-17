@@ -22,6 +22,30 @@ updates:
       - "*"
     multi-ecosystem-group: "backend"
 
+  # Frontend dependencies (React app + Playwright e2e under /frontend) grouped into one monthly PR
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    schedule:
+      interval: "monthly"
+    labels:
+      - "dependencies"
+    commit-message:
+      prefix: "build"
+      include: "scope"
+    groups:
+      frontend-dependencies:
+        applies-to: version-updates
+        patterns:
+          - "*"
+        update-types:
+          - "patch"
+          - "minor"
+          - "major"
+      frontend-security:
+        applies-to: security-updates
+        patterns:
+          - "*"
+
   # Dev tooling (bpmnlint and its local plugin)
   - package-ecosystem: "npm"
     directory: "/tools"
