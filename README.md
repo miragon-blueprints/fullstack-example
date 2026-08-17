@@ -1,89 +1,77 @@
-# CIB seven Bike-Leasing Blueprint
+# Fullstack Bike-Leasing Blueprint
 
-A ready-to-fork **starting point** for automating a business process on
-[CIB seven](https://cibseven.org) (the community fork of Camunda 7) with an **embedded engine**,
-Spring Boot and Kotlin — one complete, runnable, production-shaped BPMN service you can clone and make
-your own.
+A ready-to-fork **fullstack** starting point for automating a business process end to end: the same
+[CIB seven](https://cibseven.org) (community fork of Camunda 7) **embedded-engine** backend as the
+sibling engine blueprints, plus a **React frontend** and the family's first **AI-agent setup** —
+one complete, runnable BPMN application with an enforced architecture on *both* sides of the stack.
 
 ## The scenario
 
-Meet **MiraVelo** — a (fictional) lifestyle bike brand for the quarter-life-crisis crowd: gravel bikes
-for the weekends that count, road bikes for everyone who just wants to feel the asphalt. MiraVelo sells
-its bikes on a **leasing model** for private and corporate customers, and this project automates that
-leasing application from the first request to an active lease.
+Meet **MiraVelo** — a (fictional) lifestyle bike brand for the quarter-life-crisis crowd: gravel
+bikes for the weekends that count, road bikes for everyone who just wants to feel the asphalt.
+MiraVelo sells its bikes on a **leasing model** for private and corporate customers, and this project
+automates that leasing application from the first request to an active lease.
 
-It's a made-up company, so nobody gets hurt when the DMN politely declines a 15-year-old's application
-for a carbon road bike.
+It's a made-up company, so nobody gets hurt when the DMN politely declines a 15-year-old's
+application for a carbon road bike.
+
+In the UI a customer submits an application (name, income, a bike from the catalogue), watches the
+case advance on its own — the detail page polls while the engine works asynchronously — and signs the
+contract or reports the handover when the process asks for it. When a bike turns out to be out of
+stock, the case lands in a **back-office inbox** (`/aufgaben`), where an agent picks an alternative
+and the process continues. Every business action goes through the domain; timers and the deliberately
+UI-less `clarify-return` task stay engine concerns.
 
 ## What's inside
 
-Most engine examples stop at a happy-path service task. This one deliberately walks through the **broad
-palette of BPMN elements you actually meet in real processes** — and the engineering scaffolding around
-them — so a new project starts from something complete instead of a blank page:
-
-![The bike-leasing process](docs/bike-leasing.png)
-
-- a **message start event**, **service tasks** (JavaDelegates) and a **DMN business-rule task**;
-- an **embedded sub-process** with an **event-based gateway** (sign vs. a 14-day deadline) and a
-  non-interrupting **7-day reminder timer**;
-- a **parallel fork/join**, and a **user task with a Camunda Form** — completable in the Tasklist *or*
-  via a REST endpoint;
-- an **execution listener** on a service task and a **task listener** on the user task — the two
-  common listener hooks, wired as Spring beans just like the delegates;
-- **compensation / SAGA** handlers guarded by **error** and **escalation** boundary events;
-- a **call activity** into a second process, a **message event sub-process** (application withdrawal),
-  and a **terminate end event**.
+- **Backend** — Kotlin / Spring Boot 4, **hexagonal**, CIB seven 2.2.0 embedded (JavaDelegates). The
+  full BPMN palette (message start, DMN, event-based gateway, timers, parallel fork/join, user tasks,
+  compensation) with architecture (ArchUnit + Konsist), model validation (`bpmn-to-code`), mutation
+  testing (pitest, gated at 80) and API scenarios (Bruno) enforced at build time.
+- **Frontend** — React 19, **Feature-Sliced Design**, Tailwind v4 (canonical Miragon CI), TanStack
+  Router/Query, a shadcn-style design system, forms with react-hook-form + zod. Layering enforced by
+  steiger + ESLint + knip; MSW-backed vitest; Playwright e2e mapped 1:1 to the Bruno scenarios.
+- **The contract** — springdoc generates `openapi/openapi.json`, which is **committed and
+  drift-gated**; orval regenerates the frontend's typed TanStack Query client from it. No contract,
+  no fullstack story.
+- **AI-ready** — `AGENTS.md` + `frontend/AGENTS.md`, eight skills and two review subagents in
+  `.claude/`, and nine ADRs in `docs/adr/`.
 
 ## How it's built
 
 ```
-service/
-  common-architecture-tests/   reusable ArchUnit + Konsist rule suite (src/main)
-  app/                         the CIB seven bike-leasing service (hexagonal)
-    adapter/inbound/rest        domain REST controllers
-    adapter/inbound/cibseven    JavaDelegates for the BPMN service tasks
-    adapter/outbound/cibseven   drives the engine (RuntimeService / TaskService)
-    adapter/outbound/db         JPA persistence (leasing applications + bike portfolio)
-    adapter/outbound/dealer     simulated bike dealer (stock check + order)
-    adapter/process             generated *ProcessApi (bpmn-to-code) + engine config
-    application/{port,service}  use-case ports and their services
-    domain/{leasing,bike}       pure domain model
-    resources/{bpmn,dmn,forms}  the process models and Camunda Forms
-bruno/                         REST scenarios (happy-path / escalation / abort / not-solvent / …)
-tools/                         BPMN linting (bpmnlint)
-stack/                         Postgres dev stack (docker compose)
-.github/                       pre-merge pipeline + Dependabot
+fullstack-example/
+├── AGENTS.md · CLAUDE.md            # AI guidance (AGENTS.md is the single source)
+├── service/
+│   ├── common-architecture-tests/  # ArchUnit + Konsist rules (fail the build)
+│   └── app/                         # hexagonal Kotlin/Spring Boot 4 + CIB seven
+├── openapi/openapi.json            # GENERATED by a test, COMMITTED, drift-gated in CI
+├── frontend/                        # React + FSD (npm-only; e2e/ Playwright specs)
+├── bruno/                           # 6 API scenario collections
+├── tools/                           # bpmnlint + git-hook installer
+├── stack/docker-compose.yml         # Postgres 18.4
+├── docs/{adr/, api-contract.md, local-development.md, mutation-testing.md, bike-leasing.png}
+├── .claude/{skills/, agents/}       # 8 skills, 2 subagents
+└── .github/workflows/               # pre-merge (5 parallel jobs) + nightly
 ```
 
-- **Stack:** Kotlin 2.4 · Spring Boot 4 · CIB seven 2.2 (embedded) · PostgreSQL · Gradle with a
-  `libs.versions.toml` version catalog.
-- **Generated process API:** the [`bpmn-to-code`](https://github.com/emaarco/bpmn-to-code) Gradle
-  plugin turns each `.bpmn` into a typed `*ProcessApi` object, so element ids, messages, timers and
-  variables are compile-checked constants used by both delegates and tests.
-- **Forms:** Camunda Forms (`.form`) are deployed with the process and render in the CIB seven
-  Tasklist/Cockpit for the user tasks.
-- **BPMN linting:** [`bpmnlint`](https://github.com/bpmn-io/bpmnlint) (`bpmnlint:recommended`) gates
-  the `.bpmn` models in `tools/`, run in CI before the Gradle build.
+**Stack:** Kotlin · Spring Boot 4 · CIB seven 2.2.0 · React 19 · TanStack Router/Query · Tailwind v4 ·
+orval · Vite · Vitest · Playwright.
+
+**Ports:** Postgres `5432` · backend + engine `8080` · Cockpit `8080/camunda` · spec
+`8080/v3/api-docs` · Vite `5173`.
 
 ## Design decisions
 
-- **Hexagonal architecture** keeps the engine and framework at the edges: the domain and use cases
-  never depend on CIB seven, so business logic is testable and the engine is replaceable. The
-  `:service:common-architecture-tests` module enforces this with **ArchUnit** (bytecode: layering,
-  dependency direction, naming) and **Konsist** (source: one declaration per file, no wildcard
-  imports) — one line wires it into a service: `class ArchitectureTest : ServiceArchitectureTest(...)`.
-- **Unit tests** (JUnit 5 + MockK) cover every domain type, application service and adapter with
-  given/when/then comments and shared `testLeasingApplication(...)` builders — controllers via
-  `@WebMvcTest`, persistence via `@DataJpaTest`. JavaDelegates are covered by the process tests.
-- **Process tests** (`cibseven-bpm-assert`) drive the deployed model deterministically — timers and
-  async continuations are fired and messages correlated by hand — covering happy-path, escalation,
-  abort, DMN rejection, and the bike-unavailable → alternative-selection loop.
-- **Model validation** (`bpmn-to-code-testing`) checks the `.bpmn` models structurally at build time
-  (`BpmnRules.all()` plus a custom rule requiring every service task to use a delegate expression).
-- **Bruno + CI** proves the same scenarios against the *running* app: domain REST endpoints drive the
-  business actions, and the CIB seven `/engine-rest` API completes user tasks and fires timer jobs so
-  the whole flow runs in the pipeline without real 14-day waits.
-- **Dependabot** keeps Gradle, the Postgres image and GitHub Actions current.
+Each is recorded as an ADR — read the *why* before changing the *what*:
+
+- **Hexagonal backend, machine-enforced** — [ADR-0002](docs/adr/0002-hexagonal-architecture-for-the-backend.md)
+- **Feature-Sliced Design frontend** (and why `processes/` is banned) — [ADR-0003](docs/adr/0003-feature-sliced-design-for-the-frontend.md)
+- **OpenAPI as the checked-in contract** — [ADR-0004](docs/adr/0004-openapi-as-the-checked-in-contract.md) · see [docs/api-contract.md](docs/api-contract.md)
+- **Frontend stays out of the Gradle build** — [ADR-0005](docs/adr/0005-frontend-stays-out-of-the-gradle-build.md)
+- **Mutation testing as a blocking PR gate** — [ADR-0006](docs/adr/0006-mutation-testing-as-a-blocking-pr-gate.md) · see [docs/mutation-testing.md](docs/mutation-testing.md)
+- **`AGENTS.md` as the single source** — [ADR-0007](docs/adr/0007-agents-md-as-the-single-source.md)
+- **Fixed ports for v1, portless as the upgrade** — [ADR-0008](docs/adr/0008-fixed-ports-for-v1-portless-as-the-upgrade.md)
 
 ## Run it
 
@@ -91,43 +79,35 @@ stack/                         Postgres dev stack (docker compose)
 # 1. start Postgres
 docker compose -f stack/docker-compose.yml up -d
 
-# 2. run the app (CIB seven Cockpit/Tasklist at http://localhost:8080/camunda, admin/admin)
+# 2. run the backend + engine (CIB seven Cockpit at http://localhost:8080/camunda, admin/admin)
 ./gradlew :service:app:bootRun
 
-# 3. lint the BPMN models
-npm --prefix tools ci && npm --prefix tools run lint:bpmn
-
-# 4. drive the scenarios (build + arch + process tests first, then the REST flows)
-./gradlew build
-cd bruno && npx @usebruno/cli run . --env local -r
+# 3. run the UI (http://localhost:5173)
+npm --prefix frontend ci
+npm --prefix frontend run dev
 ```
 
-Start a case with `POST http://localhost:8080/api/bike-leasing`
-(`{ "customerName": …, "email": …, "age": 35, "monthlyNetIncome": 3500, "bikeId": "BIKE-900", "bikeModel": "Gravel Explorer 900" }`).
+Then open <http://localhost:5173>, submit an application with the out-of-stock bike, sign the
+contract, open `/aufgaben`, resolve the clarification with an available bike, and watch the detail
+page's status advance on its own. See [docs/local-development.md](docs/local-development.md) for the
+full loop (Bruno, Playwright, contract regeneration).
 
-The `age` and `monthlyNetIncome` feed the `checkCreditRating` DMN; the `bikeId` identifies the bike and
-is the *only* bike attribute the engine ever carries. The descriptive `bikeModel` lives in a separate
-**bike portfolio** aggregate (its own `bike_portfolio` table, keyed by `bikeId`) — never as a process
-variable — and `GET /api/bike-leasing/{id}` resolves it back from there.
+Verify the whole thing:
 
-If the requested bike is out of stock, the `Clarify alternative with customer` user task can be resolved
-**two ways**, a deliberate contrast:
-
-- the **recommended** path — a client calls `POST …/api/bike-leasing/{id}/clarify-alternative`, which
-  routes through the domain (persisting the chosen alternative) *before* completing the task; versus
-- the **form-only** path on `clarify-return` in `cancel-bike-order.bpmn`, kept as a counter-example:
-  completing it via the Camunda Form or `/engine-rest` never touches the domain, so its data lands only
-  in process variables (see the `bpmn:documentation` on each task).
-
-Bike availability itself is decided by a `BikeDealerPort` outbound adapter (`checkAvailability` /
-`order`) whose small out-of-stock deny-list drives the branch.
+```bash
+./gradlew build                        # arch + unit + process + model validation + spec export
+git diff --exit-code openapi/openapi.json
+./gradlew :service:app:pitest          # mutation score >= 80
+npm --prefix frontend run verify       # format, eslint, steiger, knip, tsc, vitest
+```
 
 ## Contributing
 
-Contributions are welcome. Please open an issue to discuss substantial changes first, keep the
-architecture tests green (`./gradlew build`), and use
-[Conventional Commits](https://www.conventionalcommits.org) for commit messages and PR titles.
+Conventional Commits, English everywhere. Install the git hooks once with
+`npm --prefix tools run hooks:install`. The architecture, contract, mutation and FSD gates run on
+every PR — the `review-vertical-slice` subagent is a good pre-flight check that a feature is complete
+across the whole stack.
 
 ## License
 
-Licensed under the [MIT License](./LICENSE).
+See [LICENSE](LICENSE).
