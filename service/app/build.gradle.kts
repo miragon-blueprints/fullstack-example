@@ -61,7 +61,6 @@ pitest {
     junit5PluginVersion.set("1.2.2")
     targetClasses.set(mutationTargetClasses ?: listOf("io.miragon.blueprint.*"))
     targetTests.set(listOf("io.miragon.blueprint.*"))
-    // A diff-scoped PR whose changed classes are all excluded/non-mutable must not fail the build.
     failWhenNoMutations.set(false)
     excludedClasses.set(
         listOf(
