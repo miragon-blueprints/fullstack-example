@@ -42,6 +42,15 @@ The **backend is the single source of truth**, and the contract is **generated b
 The [`sync-api-client`](../../.claude/skills/sync-api-client/SKILL.md) skill runs the whole loop
 (regenerate spec → orval → fix TS across FSD slices → `api:check` clean).
 
+## Consequences
+
+- **Positive:** one contract, two gated mirrors; API changes are visible in review; the frontend build
+  is decoupled from a running backend.
+- **Negative / trade-offs:** two generated trees live in git; forgetting to regenerate is an *expected*
+  failure mode — the gate is what makes that safe, so it must never be disabled.
+- **Neutral:** determinism is a hard requirement of the export test — any non-deterministic serialisation
+  would make the gate flap.
+
 ## Implementation notes
 
 Two things bite when this runs on the embedded CIB seven engine:
@@ -56,12 +65,3 @@ Two things bite when this runs on the embedded CIB seven engine:
   fields as `string/date-time`, so DTO date fields are pinned with `@JsonFormat(shape = STRING)` to keep
   payload and contract in sync. Operation ids are set explicitly (`@Operation(operationId = …)`) so the
   generated hook names stay clean and stable (e.g. `useListLeasingApplications`).
-
-## Consequences
-
-- **Positive:** one contract, two gated mirrors; API changes are visible in review; the frontend build
-  is decoupled from a running backend.
-- **Negative / trade-offs:** two generated trees live in git; forgetting to regenerate is an *expected*
-  failure mode — the gate is what makes that safe, so it must never be disabled.
-- **Neutral:** determinism is a hard requirement of the export test — any non-deterministic serialisation
-  would make the gate flap.

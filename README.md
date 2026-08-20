@@ -59,7 +59,7 @@ UI-less `clarify-return` task stay engine concerns.
   drift-gated**; orval regenerates the frontend's typed TanStack Query client from it. No contract,
   no fullstack story.
 - **AI-ready** — `AGENTS.md` + `frontend/AGENTS.md`, eight skills and two review subagents in
-  `.claude/`, and twelve ADRs (0001–0012) in `docs/adr/`.
+  `.claude/`, and the ADRs in `docs/adr/`.
 
 ## Technology choices
 
@@ -136,7 +136,7 @@ orval · Vite · Vitest · Playwright.
 
 ## Documentation
 
-The README stays deliberately compact; the reasoning behind its shape lives as the twelve Architecture
+The README stays deliberately compact; the reasoning behind its shape lives as the Architecture
 Decision Records under [`docs/adr/`](docs/adr/) — start at the [docs index](docs/README.md). Setup, the
 ports, the dev loop and the manual smoke test are in [CONTRIBUTING.md](CONTRIBUTING.md).
 
