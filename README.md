@@ -1,8 +1,10 @@
 # Fullstack Bike-Leasing Blueprint
 
 > [!NOTE]
-> **🚧 Work in progress.** A **solution template** to fork and build on, not a shipping product.
-> Parts are still being fleshed out and it will keep evolving.
+> **🚧 Work in progress.** This is a **solution template**, a reference to fork and build on, for
+> our consultants and anyone else, not a product that ships. It's still being fleshed out, so parts
+> may be incomplete and it may not yet fully demonstrate what it's meant to. Treat it as a
+> living example, and expect it to keep evolving.
 
 **One opinionated way to start a greenfield process-automation project, wired end to end.** One BPMN
 process, automated with a [CIB seven](https://cibseven.org) (community Camunda 7 fork) **embedded
