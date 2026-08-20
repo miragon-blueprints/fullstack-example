@@ -1,22 +1,19 @@
 package io.miragon.blueprint.application.service
 
-import io.miragon.blueprint.application.port.inbound.ReportHandoverUseCase
+import io.miragon.blueprint.application.port.inbound.ActivateLeasingUseCase
 import io.miragon.blueprint.application.port.outbound.LeasingApplicationRepository
-import io.miragon.blueprint.application.port.outbound.LeasingProcess
 import io.miragon.blueprint.domain.leasing.ApplicationId
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 @Transactional
-class ReportHandoverService(
-    private val process: LeasingProcess,
+class ActivateLeasingService(
     private val repository: LeasingApplicationRepository,
-) : ReportHandoverUseCase {
+) : ActivateLeasingUseCase {
 
-    override fun reportHandover(id: ApplicationId) {
-        process.correlateHandoverReported(id)
+    override fun activate(id: ApplicationId) {
         val application = repository.findById(id) ?: error("Unknown application $id")
-        repository.save(application.reportHandover())
+        repository.save(application.activate())
     }
 }
