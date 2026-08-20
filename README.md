@@ -11,7 +11,7 @@ process, automated with a [CIB seven](https://cibseven.org) (community Camunda 7
 engine**, a **React frontend**, and an **AI-agent setup**. Its **architecture is kept honest by
 tests**, so it can't quietly rot as the process grows.
 
-![The MiraVelo bike-leasing BPMN process, from leasing request to active lease, with credit check, contract signing, insurance, bike order, and compensation](docs/assets/bike-leasing.svg)
+![The MiraVelo bike-leasing BPMN process, from leasing request to active lease, with credit check, contract signing, insurance, bike order, and compensation](docs/assets/bike-leasing.png)
 
 ## Why fork this
 

@@ -36,5 +36,5 @@ copied from [`adr/0000-adr-template.md`](adr/0000-adr-template.md). Write a new 
 
 ## Diagrams
 
-- [`assets/bike-leasing.svg`](assets/bike-leasing.svg) — the BPMN process at a glance.
+- [`assets/bike-leasing.png`](assets/bike-leasing.png) — the BPMN process at a glance.
 - [`assets/frontend-applications.png`](assets/frontend-applications.png) — the React frontend's applications list.
