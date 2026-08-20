@@ -73,10 +73,6 @@ jobs:
         run: npm --prefix frontend run build
 
   mutation:
-    # Diff-scoped mutation gate: mutates only the backend classes this PR changed, so it stays off the
-    # CI critical path while still blocking on weak assertions in the changed code. The full-module
-    # gate-80 sweep runs nightly (.github/workflows/nightly.yml). See ADR-0006 (the 5-minute escape
-    # clause). Do NOT rename this job — it is the branch-protection required check.
     name: Mutation testing (PIT, gate 80)
     runs-on: ubuntu-latest
     steps:
@@ -94,9 +90,6 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
 
-      # Map each changed backend main-source .kt file to a mutation target glob
-      # (io.miragon.blueprint.<pkg>.<File>* — the trailing * catches companions/synthetics and the
-      # <File>Kt facade). Empty when the PR touches no backend code.
       - name: Compute changed backend classes
         id: scope
         run: |
@@ -107,8 +100,6 @@ jobs:
           echo "classes=$CLASSES" >> "$GITHUB_OUTPUT"
           echo "Scoped mutation classes: ${CLASSES:-<none — pitest skipped>}"
 
-      # Fails the PR if the mutation score of the changed classes drops below the threshold in
-      # service/app/build.gradle.kts. Skipped when the PR changes no backend code.
       - name: Run PIT mutation testing (diff-scoped)
         if: steps.scope.outputs.classes != ''
         run: ./gradlew :service:app:pitest --no-daemon -PmutationTargetClasses="${{ steps.scope.outputs.classes }}"
