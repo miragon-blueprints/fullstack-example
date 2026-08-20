@@ -50,3 +50,26 @@ mutant is then *equivalent* to the original. Both are fixed by asserting **every
 - **Neutral:** raising the bar toward 100 is a documented upgrade path — the commercial
   [arcmutate Kotlin plugin](https://docs.arcmutate.com/docs/kotlin.html) filters most of the
   equivalent-mutant noise (`+KOTLIN_NO_NULLS` and Kotlin-aware mutators) and would let the threshold rise.
+
+## Update (2026-08-20) — diff-scoped on PRs, full sweep nightly
+
+The escape clause above stopped being theoretical: with the suite grown, the full-module PR run became
+the **slowest / critical-path job** in `pre-merge.yml`, and `nightly.yml` was already running the
+*identical* full sweep. We took the escape clause's own path:
+
+- **PR gate (`pre-merge.yml`)** now runs **diff-scoped** — CI computes the backend `*.kt` files the PR
+  changed (from `pull_request.base.sha`), maps them to `io.miragon.blueprint.<pkg>.<File>*`, and passes
+  them to pitest via `-PmutationTargetClasses`. It **still blocks the PR** on the changed classes'
+  score, but off the critical path. The step is skipped when a PR touches no backend code.
+- **Full-module gate-80** is now enforced solely by the **nightly** `Full mutation testing (PIT,
+  gate 80)` job — the authoritative threshold run.
+- **Build wiring:** `service/app/build.gradle.kts` reads the optional `mutationTargetClasses` property
+  (no property → full-module scope, unchanged for local runs and nightly) and sets
+  `failWhenNoMutations = false` so a PR whose changed classes are all excluded/non-mutable doesn't fail.
+- **Trade-off:** gate-80 over a single changed class is stricter granularity than over the module — a
+  PR touching only an equivalent-mutant-heavy Kotlin `value class` can dip below 80; the fix is this
+  ADR's own advice (assert every field and both branches) or excluding that class. A second,
+  differently-named top-level class in the same file is out of PR scope until the nightly sweep.
+
+The Decision text above is retained for its rationale; where it says the gate runs full-module "in its
+own parallel job in `pre-merge.yml`", read it as **diff-scoped on PRs + full-module nightly** per this update.

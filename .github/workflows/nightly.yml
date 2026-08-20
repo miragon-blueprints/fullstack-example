@@ -7,7 +7,10 @@ on:
 
 jobs:
   mutation:
-    name: Full mutation testing (PIT)
+    # Authoritative gate-80 sweep over the whole io.miragon.blueprint.* module. The PR gate
+    # (.github/workflows/pre-merge.yml) only mutates changed classes; this is where the full-module
+    # threshold is enforced. See ADR-0006.
+    name: Full mutation testing (PIT, gate 80)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

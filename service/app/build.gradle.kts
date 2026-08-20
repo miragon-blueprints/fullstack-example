@@ -54,10 +54,18 @@ tasks.test {
     forkEvery = 1
 }
 
+// Diff-scoped mutation on PRs: CI passes the changed classes via -PmutationTargetClasses so the PR
+// gate mutates only what the PR touched (fast, still blocking). No property -> full-module scope, as
+// used by the nightly full sweep and local runs. See ADR-0006.
+val mutationTargetClasses = (project.findProperty("mutationTargetClasses") as String?)
+    ?.split(",")?.map(String::trim)?.filter(String::isNotEmpty)
+
 pitest {
     junit5PluginVersion.set("1.2.2")
-    targetClasses.set(listOf("io.miragon.blueprint.*"))
+    targetClasses.set(mutationTargetClasses ?: listOf("io.miragon.blueprint.*"))
     targetTests.set(listOf("io.miragon.blueprint.*"))
+    // A diff-scoped PR whose changed classes are all excluded/non-mutable must not fail the build.
+    failWhenNoMutations.set(false)
     excludedClasses.set(
         listOf(
             "io.miragon.blueprint.adapter.process.*ProcessApi*",
