@@ -245,15 +245,9 @@ class BikeLeasingProcessTest {
             .hasPassed(
                 ProcessPath.from(FlowNodes.StartEventApplicationWithdrawn)
                     .then { it.eventReverseApplication }
-                    .throwingCompensation(FlowNodes.EventCompensateContract, includeBoundaryEvent = false) {
-                        it.serviceTaskCancelContract
-                    }
-                    .throwingCompensation(FlowNodes.EventCompensateInsurance, includeBoundaryEvent = false) {
-                        it.serviceTaskCancelPolicy
-                    }
-                    .throwingCompensation(FlowNodes.EventCompensateOrder, includeBoundaryEvent = false) {
-                        it.callActivityCancelBikeOrder
-                    }
+                    .throwingCompensation(FlowNodes.EventCompensateContract) { it.serviceTaskCancelContract }
+                    .throwingCompensation(FlowNodes.EventCompensateInsurance) { it.serviceTaskCancelPolicy }
+                    .throwingCompensation(FlowNodes.EventCompensateOrder) { it.callActivityCancelBikeOrder }
                     .then { it.serviceTaskSendCancellationConfirmation }
                     .then { it.endEventApplicationCancelled },
             )
