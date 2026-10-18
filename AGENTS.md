@@ -67,7 +67,8 @@ before writing code. The hard rules:
   there.
 - **`adapter/process` is generated.** Never hand-edit `*ProcessApi.kt` or the shared
   `ServiceTasks`/`Messages`/`ProcessVariables`/`Errors`/`Escalations` files; edit the `.bpmn` and
-  re-run `generateBpmnModels`.
+  re-run `generateBpmnModels`. `.claude/settings.json` denies edits to them, to `openapi.json` and to
+  the generated frontend client.
 - **Suffixes:** inbound port `UseCase|Query`; outbound `Port|Repository|Process`; service
   `Service|Configuration`; `adapter.inbound.rest` `Controller|Dto|Input|Mapper|Configuration`;
   `adapter.outbound` `PersistenceAdapter|Adapter|Mapper|Entity|Repository`.
