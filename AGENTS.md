@@ -100,6 +100,7 @@ TDD. Match the test style to the layer:
 | domain | plain unit tests |
 | application service | mockk unit tests (mock the ports) |
 | `adapter.inbound.rest` | `@WebMvcTest` + MockkBean |
+| `adapter.inbound.cibseven` | MockK unit test per delegate (skill `create-delegate`) |
 | `adapter.outbound.db` | `@DataJpaTest` |
 | process end-to-end | CIB seven process tests (JGiven), paths asserted via `ProcessPath` |
 | frontend slices | vitest + MSW (generated handlers) |
