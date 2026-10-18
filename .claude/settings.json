@@ -15,14 +15,13 @@
       "Bash(gh pr checks *)"
     ],
     "deny": [
-      "Edit(/service/app/src/main/kotlin/io/miragon/blueprint/adapter/process/BikeLeasingProcessProcessApi.kt)",
-      "Edit(/service/app/src/main/kotlin/io/miragon/blueprint/adapter/process/CancelBikeOrderProcessApi.kt)",
-      "Edit(/service/app/src/main/kotlin/io/miragon/blueprint/adapter/process/ServiceTasks.kt)",
-      "Edit(/service/app/src/main/kotlin/io/miragon/blueprint/adapter/process/Messages.kt)",
-      "Edit(/service/app/src/main/kotlin/io/miragon/blueprint/adapter/process/ProcessVariables.kt)",
-      "Edit(/service/app/src/main/kotlin/io/miragon/blueprint/adapter/process/Errors.kt)",
-      "Edit(/service/app/src/main/kotlin/io/miragon/blueprint/adapter/process/Escalations.kt)",
-      "Edit(/openapi/openapi.json)",
+      "Edit(/**/adapter/process/*ProcessApi.*)",
+      "Edit(/**/adapter/process/ServiceTasks.*)",
+      "Edit(/**/adapter/process/Messages.*)",
+      "Edit(/**/adapter/process/ProcessVariables.*)",
+      "Edit(/**/adapter/process/Errors.*)",
+      "Edit(/**/adapter/process/Escalations.*)",
+      "Edit(/openapi/*.json)",
       "Edit(/frontend/src/shared/api/generated/**)"
     ]
   },

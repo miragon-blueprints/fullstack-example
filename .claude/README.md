@@ -33,7 +33,9 @@ each skill's `references/`.
 ## Settings and hooks
 
 - `settings.json` denies edits to generated files (`adapter/process`, `openapi.json`, the orval
-  client), allows the build, lint and read-only `gh` commands, and wires one hook. Personal additions
+  client). The process-API patterns name no service path (`/**/adapter/process/Errors.*`), so they
+  also hold for further services under `service/`; `HistoryCleanupConfiguration` stays editable. It
+  allows the build, lint and read-only `gh` commands, and wires one hook. Personal additions
   go in `settings.local.json` (git-ignored).
 - `settings.json` also enables two pinned plugins, `bpmn-cli@miragon-bpmn` (skill `bpmn-cli:bpmn`) and
   `operate@miragon` (skill `operate:operate`, `/operate:status`), from marketplaces fixed to a release
